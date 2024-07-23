@@ -82,18 +82,30 @@ function SystemOfGame() {
     TimeLeftCount.innerHTML--;
     if (TimeLeftCount.innerHTML == 0) {
       clearInterval(count);
-      if (TheWorldOfRoundTypping.innerHTML === inputText.value) {
-        ScorePlayerGot.innerHTML++;
-        inputText.value = "";
-        if (words.length > 0) {
-          WordsOfGame();
-          SystemOfGame();
+      if (inputText.value !== "") {
+        if (
+          TheWorldOfRoundTypping.innerHTML ===
+          inputText.value[0].toUpperCase() + inputText.value.slice(1)
+        ) {
+          ScorePlayerGot.innerHTML++;
+          inputText.value = "";
+          if (words.length > 0) {
+            WordsOfGame();
+            SystemOfGame();
+          } else {
+            let Win = document.querySelector(".finish span");
+            Win.className = "good";
+            Win.textContent = "Congratiulation";
+            Win.style.display = "block";
+            ResultOfGameFinish.append(Win);
+            RepeatTheGame();
+          }
         } else {
-          let Win = document.querySelector(".finish span");
-          Win.className = "good";
-          Win.textContent = "Congratiulation";
-          Win.style.display = "block";
-          ResultOfGameFinish.append(Win);
+          let Lose = document.querySelector(".finish span");
+          Lose.className = "bad";
+          Lose.textContent = "Game Over";
+          Lose.style.display = "block";
+          ResultOfGameFinish.append(Lose);
           RepeatTheGame();
         }
       } else {
