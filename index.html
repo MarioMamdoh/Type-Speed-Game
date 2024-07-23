@@ -6,7 +6,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Typing Speed Game</title>
 
-    <link rel="stylesheet" href="Main.css" />
+    <!-- <link rel="stylesheet" href="Main.css" /> -->
+
+    <style>
+      :root {
+        --main-color: #2196f3;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Open Sans", sans-serif;
+      }
+      .game {
+        background-color: #eee;
+        height: 100vh;
+      }
+      .name {
+        text-align: center;
+        font-size: 38px;
+        background-color: var(--main-color);
+        color: white;
+        padding: 13px;
+        border-radius: 15px;
+      }
+      .container {
+        margin: auto;
+        max-width: 900px;
+      }
+      .message {
+        text-align: center;
+        font-size: 20px;
+        color: black;
+        padding: 13px;
+        background-color: white;
+      }
+      .message span {
+        color: #4caf50;
+        font-weight: bold;
+      }
+      .message span::after {
+        content: " ]";
+        color: #4caf50;
+      }
+      .message span::before {
+        content: "[ ";
+        color: #4caf50;
+      }
+      .start {
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+        background-color: #4caf50;
+        padding: 15px;
+        width: fit-content;
+        display: block;
+        margin: 20px auto;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+      }
+      .the-word {
+        font-size: 50px;
+        background: var(--main-color);
+        width: fit-content;
+        margin: auto;
+        color: white;
+        padding: 15px;
+        border-radius: 15px;
+        display: none;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      .input {
+        display: block;
+        width: 100%;
+        padding: 17px;
+        border: 2px solid var(--main-color);
+        border-radius: 15px;
+        color: var(--main-color);
+        text-transform: capitalize;
+      }
+      .input:focus {
+        outline: none;
+      }
+      .upcoming-words {
+        text-align: center;
+        background-color: var(--main-color);
+        padding: 25px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .upcoming-words div {
+        background-color: white;
+        padding: 9px;
+        margin: 10px 15px;
+      }
+      .control {
+        display: flex;
+        justify-content: space-between;
+        background-color: white;
+        padding: 15px;
+      }
+      .time span {
+        color: #4caf50;
+      }
+
+      .score span {
+        color: #4caf50;
+      }
+      .finish {
+        width: fit-content;
+        margin: auto;
+        margin-top: 40px;
+      }
+
+      .finish span {
+        position: fixed;
+        padding: 75px;
+        border-radius: 15px;
+        font-size: 60px;
+        display: none;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 999;
+      }
+      .finish .good {
+        background-color: #4caf50;
+        color: white;
+      }
+      .finish .bad {
+        background-color: black;
+        color: red;
+      }
+      .select {
+        text-align: center;
+        padding: 10px;
+        font-size: 20px;
+      }
+    </style>
+    <script></script>
   </head>
   <body>
     <div class="game">
@@ -38,6 +185,174 @@
         <div class="finish"><span class="bad">Game Over</span></div>
       </div>
     </div>
-    <script src="Main.js"></script>
+    <!-- <script src="Main.js">
+    </script> -->
+    <script>
+      let words = [
+        "Hello",
+        "Programming",
+        "Code",
+        "Javascript",
+        "Town",
+        "Country",
+        "Testing",
+        "Youtube",
+        "Linkedin",
+        "Twitter",
+        "Github",
+        "Leetcode",
+        "Internet",
+        "Python",
+        "Scala",
+        "Destructuring",
+        "Paradigm",
+        "Styling",
+        "Cascade",
+        "Documentation",
+        "Coding",
+        "Funny",
+        "Working",
+        "Dependencies",
+        "Task",
+        "Runner",
+        "Roles",
+        "Test",
+        "Rust",
+        "Playing",
+      ];
+
+      const lvls = {
+        Easy: 5,
+        Normal: 4,
+        Hard: 3,
+      };
+      let lvlOfGame = document.querySelector(".lvl");
+      let SecondsOfGame = document.querySelector(".seconds");
+      let StartButton = document.querySelector(".start");
+      let TheWorldOfRoundTypping = document.querySelector(".the-word");
+      let inputText = document.querySelector(".input");
+      let upComingWords = document.querySelector(".upcoming-words");
+      let TimeLeftCount = document.querySelector(".control .time span");
+      let ScorePlayerGot = document.querySelector(".control .score .got");
+      let TotalOfScore = document.querySelector(".control .score .total");
+      let ResultOfGameFinish = document.querySelector(".finish");
+      let ChoosenOfLevel = document.querySelector("#sel");
+      TotalOfScore.innerHTML = words.length;
+      inputText.onpaste = function () {
+        return false;
+      };
+      ChoosenOfLevel.onclick = function () {
+        lvlOfGame.innerHTML = ChoosenOfLevel.value;
+        SecondsOfGame.innerHTML = lvls[`${ChoosenOfLevel.value}`];
+      };
+
+      StartButton.onclick = function () {
+        StartButton.style.display = "none";
+        WordsOfGame();
+        SystemOfGame();
+      };
+
+      function WordsOfGame() {
+        TheWorldOfRoundTypping.style.display = "block";
+        TheWorldOfRoundTypping.innerHTML =
+          words[parseInt(Math.random() * words.length)];
+        upComingWords.innerHTML = "";
+        for (let i = 0; i < words.length; i++) {
+          let div = document.createElement("div");
+          div.textContent = `${words[i]}`;
+          upComingWords.append(div);
+        }
+        words.splice(words.indexOf(TheWorldOfRoundTypping.innerHTML), 1);
+      }
+
+      function SystemOfGame() {
+        TimeLeftCount.innerHTML = lvls[ChoosenOfLevel.value];
+
+        let count = setInterval(() => {
+          TimeLeftCount.innerHTML--;
+          if (TimeLeftCount.innerHTML == 0) {
+            clearInterval(count);
+            if (inputText.value !== "") {
+              if (
+                TheWorldOfRoundTypping.innerHTML ===
+                inputText.value[0].toUpperCase() + inputText.value.slice(1)
+              ) {
+                ScorePlayerGot.innerHTML++;
+                inputText.value = "";
+                if (words.length > 0) {
+                  WordsOfGame();
+                  SystemOfGame();
+                } else {
+                  let Win = document.querySelector(".finish span");
+                  Win.className = "good";
+                  Win.textContent = "Congratiulation";
+                  Win.style.display = "block";
+                  ResultOfGameFinish.append(Win);
+                  RepeatTheGame();
+                }
+              } else {
+                let Lose = document.querySelector(".finish span");
+                Lose.className = "bad";
+                Lose.textContent = "Game Over";
+                Lose.style.display = "block";
+                ResultOfGameFinish.append(Lose);
+                RepeatTheGame();
+              }
+            } else {
+              let Lose = document.querySelector(".finish span");
+              Lose.className = "bad";
+              Lose.textContent = "Game Over";
+              Lose.style.display = "block";
+              ResultOfGameFinish.append(Lose);
+              RepeatTheGame();
+            }
+          }
+        }, 1000);
+      }
+
+      function RepeatTheGame() {
+        let restart = setTimeout(() => {
+          inputText.value = "";
+          upComingWords.innerHTML = "";
+          StartButton.style.display = "block";
+          TheWorldOfRoundTypping.style.display = "none";
+          ScorePlayerGot.innerHTML = 0;
+          document.querySelector(".finish span").style.display = "none";
+          words = [
+            "Hello",
+            "Programming",
+            "Code",
+            "Javascript",
+            "Town",
+            "Country",
+            "Testing",
+            "Youtube",
+            "Linkedin",
+            "Twitter",
+            "Github",
+            "Leetcode",
+            "Internet",
+            "Python",
+            "Scala",
+            "Destructuring",
+            "Paradigm",
+            "Styling",
+            "Cascade",
+            "Documentation",
+            "Coding",
+            "Funny",
+            "Working",
+            "Dependencies",
+            "Task",
+            "Runner",
+            "Roles",
+            "Test",
+            "Rust",
+            "Playing",
+          ];
+          clearTimeout(restart);
+        }, 5000);
+      }
+    </script>
   </body>
 </html>
